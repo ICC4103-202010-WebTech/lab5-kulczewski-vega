@@ -20,4 +20,53 @@ namespace :db do
     puts(result)
     puts("EOQ") # End Of Query -- always add this line after a query.
   end
+
+  task :model_queries => :environment do
+    puts("Query 1: Number of tickets bought by a customer")
+    result = Order.joins(:tickets).where(customer_id: 1).count()
+    puts(result)
+    puts("EOQ")
+  end
+
+  task :model_queries => :environment do
+    puts("Query 2:  Total number of different events that a given customer has attended")
+    result = TicketType.select(:event_id).joins(tickets: :order).where("customer_id = '1'").distinct.count()
+    puts(result)
+    puts("EOQ")
+  end
+
+  task :model_queries => :environment do
+    puts("Query 3: Names of the events attended by a given customer")
+    result = Event.select(:name).joins(ticket_types: {tickets: :order}).where("customer_id = '1'")
+    puts(result)
+    puts("EOQ")
+  end
+
+  task :model_queries => :environment do
+    puts("Query 4:  Total number of tickets sold for an event")
+    result = Order.select(:customer_id).joins(tickets: :ticket_type).where("event_id = '1'").count()
+    puts(result)
+    puts("EOQ")
+  end
+
+  task :model_queries => :environment do
+    puts("Query 5: Total sales of an event ")
+    result = Order.select(:customer_id).joins(tickets: :ticket_type).where("event_id = '1'").sum("ticket_price")
+    puts(result)
+    puts("EOQ")
+  end
+
+  task :model_queries => :environment do
+    puts("Query 6: The event that has been most attended by women")
+    result = TicketType.select("event_id, count(event_id) as c").joins(tickets: {order: :customer}).where("gender = 'f'").group(:event_id).order("c").first()
+    puts(result)
+    puts("EOQ")
+  end
+
+  task :model_queries => :environment do
+    puts("Query 7: The event that has been most attended by men ages 18 to 30")
+    result = TicketType.select("event_id, count(event_id) as c").joins(tickets: {order: :customer}).where("gender = 'm' AND age BETWEEN '18' AND '30'").group(:event_id).order("c").first()
+    puts(result)
+    puts("EOQ")
+  end
 end
