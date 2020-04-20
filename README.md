@@ -1,4 +1,5 @@
 # Base Code for Lab Assignment 5
+Carlos Vega - Matias Kulczewski
 
 In this lab assignment you will write Active Record queries on the model layer 
 of the Ticket Shop application, based on fixture data (sample data), automatically 
